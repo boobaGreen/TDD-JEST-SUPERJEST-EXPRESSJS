@@ -1,0 +1,15 @@
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+
+# dotenv environment variable files
+config.env
+.env
+
+# cache
+.cache/
+
+# visual studio code setting
+.vscode/
