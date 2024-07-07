@@ -1,4 +1,4 @@
-const { createUser } = require("../../utility/helper");
+const { createUser, getUsers } = require("../utility/helper");
 
 describe("it should test all utility functions", () => {
   it("should create user properly", async () => {
@@ -22,5 +22,10 @@ describe("it should test all utility functions", () => {
     expect(user.email).toBe(userData.email);
 
     expect(user.password).not.toBe(userData.password);
+  });
+
+  it("should get all users", async () => {
+    const users = await getUsers();
+    expect(users.length).toBeGreaterThan(0);
   });
 });

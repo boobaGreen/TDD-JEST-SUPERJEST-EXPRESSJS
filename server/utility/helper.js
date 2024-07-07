@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 
+// create a new user
 const createUser = async (userData) => {
   try {
     const { name, email, password } = userData;
@@ -18,4 +19,15 @@ const createUser = async (userData) => {
   }
 };
 
-module.exports = { createUser };
+// get list of all users
+const getUsers = async () => {
+  try {
+    const users = await User.find();
+    return users;
+  } catch (error) {
+    console.log(error.message);
+    return { error: error.message };
+  }
+};
+
+module.exports = { createUser, getUsers };

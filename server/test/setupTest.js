@@ -13,13 +13,13 @@ const config = async () => {
     );
     // console.log("run this before all tests");
     await User.deleteMany();
-
-    // create all users
-    await Promise.all(users.map((user) => createUser(user)));
   });
   beforeEach(async () => {
     // console.log("run this before each test");
     await User.deleteMany();
+
+    // create a list of base users
+    await Promise.all(users.map((user) => createUser(user)));
   });
   afterAll(async () => {
     // console.log("run this after all tests");

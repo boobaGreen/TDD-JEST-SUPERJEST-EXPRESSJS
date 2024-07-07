@@ -1,14 +1,13 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/authRoutes");
 
 //set up middleware
 app.use(express.json());
 app.use(cookieParser());
 
 //set up routes
-app.get("/", (req, res) => {
-  return res.json({ message: "Hello from server! TDD project" });
-});
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
