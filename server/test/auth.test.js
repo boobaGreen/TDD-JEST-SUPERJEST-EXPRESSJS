@@ -81,17 +81,7 @@ describe("testing authentication", () => {
     expect(body.error).toBe("User not found");
   }, 10000); // Increased timeout for this test
 
-  // it("it should check for authentication", async () => {
-  //   //login user
-  //   const userData = users[0];
-  //   const loginUser = await request(app).post("/api/auth/login").send(userData);
-  //   const token = loginUser.headers["set-cookie"][0].split("=")[1];
-  //   // make a request with the token to check if the user is authenticated
-  //   const { body, statusCode } = await request(app)
-  //     .get("/api/auth")
-  //     .set("Cookie", `jwt=${token}`);
-  //   expect(statusCode).toBe(404);
-  // });
+  // to add login jwt no valid **************************+
 
   it("should get profile of already logged in user", async () => {
     //login user
