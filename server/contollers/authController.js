@@ -1,6 +1,7 @@
 const { getUsers, createUser } = require("../utility/helper");
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const getUsersController = async (req, res, next) => {
   const users = await getUsers();
@@ -32,8 +33,11 @@ const loginController = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
     const { password: hashedPassword, ...rest } = user._doc; // ._doc is a mongoose method for getting the document in JSON format
-
+    res.cookie("jwt", token);
     return res.status(200).json(rest);
   } catch (error) {
     console.log(error);

@@ -46,23 +46,28 @@ describe("testing authentication", () => {
     expect(body.error).toBeTruthy();
   });
 
-  // it("should login user properly", async () => {
-  //   const userData = users[0];
-  //   const { body, statusCode } = await request(app)
-  //     .post("/api/auth/login")
-  //     .send(userData);
-  //   console.log("body", body);
-  //   expect(statusCode).toBe(200);
-  //   expect(body).toEqual(
-  //     expect.objectContaining({
-  //       _id: expect.any(String),
-  //       name: expect.any(String),
-  //       email: expect.any(String),
-  //     })
-  //   );
-  //   expect(body.email).toBe(userData.email);
-  //   expect(body.name).toBe(userData.name);
-  // });
+  it("should login user properly", async () => {
+    const userData = users[0];
+    const { body, statusCode, headers } = await request(app)
+      .post("/api/auth/login")
+      .send(userData);
+
+    const token = headers["set-cookie"][0].split("=")[1];
+    //estrai jwt dal cookie
+
+    expect(token).toBeTruthy();
+    expect(token).toBeDefined();
+    expect(statusCode).toBe(200);
+    expect(body).toEqual(
+      expect.objectContaining({
+        _id: expect.any(String),
+        name: expect.any(String),
+        email: expect.any(String),
+      })
+    );
+    expect(body.email).toBe(userData.email);
+    expect(body.name).toBe(userData.name);
+  });
 
   it("should not login user with invalid credentials", async () => {
     const userData = { email: "nonvalidemail@gmail.com", password: "invalid" };
@@ -75,4 +80,16 @@ describe("testing authentication", () => {
     expect(body.error).toBeTruthy();
     expect(body.error).toBe("User not found");
   }, 10000); // Increased timeout for this test
+
+  it("it should check for authentication", async () => {
+    //login user
+    const userData = users[0];
+    const loginUser = await request(app).post("/api/auth/login").send(userData);
+    const token = loginUser.headers["set-cookie"][0].split("=")[1];
+    // make a request with the token to check if the user is authenticated
+    const { body, statusCode } = await request(app)
+      .get("/api/auth")
+      .set("Cookie", `jwt=${token}`);
+    console.log("status code", statusCode);
+  });
 });
