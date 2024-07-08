@@ -1,9 +1,10 @@
 const request = require("supertest");
 const dotenv = require("dotenv").config();
 const app = require("../app");
+const users = require("./data/users");
 
 describe("testing authentication", () => {
-  it("it should just pass", async () => {
+  it("it should get list of users", async () => {
     const { body, statusCode } = await request(app).get("/api/auth/register");
     expect(statusCode).toBe(200);
 
@@ -44,4 +45,34 @@ describe("testing authentication", () => {
       .send(userData);
     expect(body.error).toBeTruthy();
   });
+
+  // it("should login user properly", async () => {
+  //   const userData = users[0];
+  //   const { body, statusCode } = await request(app)
+  //     .post("/api/auth/login")
+  //     .send(userData);
+  //   console.log("body", body);
+  //   expect(statusCode).toBe(200);
+  //   expect(body).toEqual(
+  //     expect.objectContaining({
+  //       _id: expect.any(String),
+  //       name: expect.any(String),
+  //       email: expect.any(String),
+  //     })
+  //   );
+  //   expect(body.email).toBe(userData.email);
+  //   expect(body.name).toBe(userData.name);
+  // });
+
+  it("should not login user with invalid credentials", async () => {
+    const userData = { email: "nonvalidemail@gmail.com", password: "invalid" };
+    const { body, statusCode } = await request(app)
+      .post("/api/auth/login")
+      .send(userData);
+
+    expect([404]).toContain(statusCode);
+
+    expect(body.error).toBeTruthy();
+    expect(body.error).toBe("User not found");
+  }, 10000); // Increased timeout for this test
 });

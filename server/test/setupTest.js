@@ -6,11 +6,10 @@ const users = require("./data/users");
 const { createUser } = require("../utility/helper");
 
 const config = async () => {
+  const uri = process.env.MONGO_URI;
   beforeAll(async () => {
     // use a different database for testing
-    await connectDB(
-      "mongodb+srv://claudiodallaradev:sKxpQVsRxuFH0b87@tdd-project-test.l0jfkjv.mongodb.net/?retryWrites=true&w=majority&appName=TDD-Project-Test"
-    );
+    await connectDB(uri);
     // console.log("run this before all tests");
     await User.deleteMany();
   });
