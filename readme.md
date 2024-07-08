@@ -62,7 +62,7 @@ Our `setupTest.js` file handles:
 To run the tests, use the following command:
 
 ```bash
-npm test
+npm run test
 ```
 
 Our `setupTest.js` file handles:
@@ -77,7 +77,7 @@ Our `setupTest.js` file handles:
 To run the tests, use the following command:
 
 ````bash
-npm test
+npm run test
 
 This will start Jest in watch mode, allowing you to rerun tests automatically as you make changes to your code.
 
