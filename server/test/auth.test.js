@@ -81,15 +81,56 @@ describe("testing authentication", () => {
     expect(body.error).toBe("User not found");
   }, 10000); // Increased timeout for this test
 
-  it("it should check for authentication", async () => {
+  // it("it should check for authentication", async () => {
+  //   //login user
+  //   const userData = users[0];
+  //   const loginUser = await request(app).post("/api/auth/login").send(userData);
+  //   const token = loginUser.headers["set-cookie"][0].split("=")[1];
+  //   // make a request with the token to check if the user is authenticated
+  //   const { body, statusCode } = await request(app)
+  //     .get("/api/auth")
+  //     .set("Cookie", `jwt=${token}`);
+  //   expect(statusCode).toBe(404);
+  // });
+
+  it("should get profile of already logged in user", async () => {
     //login user
     const userData = users[0];
     const loginUser = await request(app).post("/api/auth/login").send(userData);
     const token = loginUser.headers["set-cookie"][0].split("=")[1];
-    // make a request with the token to check if the user is authenticated
+    // get user profile
     const { body, statusCode } = await request(app)
-      .get("/api/auth")
+      .get("/api/auth/profile")
       .set("Cookie", `jwt=${token}`);
-    console.log("status code", statusCode);
+    expect(statusCode).toBe(200);
+    expect(body.name).toBe(userData.name);
+    expect(body).toEqual(
+      expect.objectContaining({
+        _id: expect.any(String),
+        name: expect.any(String),
+        email: expect.any(String),
+      })
+    );
+  });
+  it("should log out user properly", async () => {
+    //login user
+    const userData = users[0];
+    const loginUser = await request(app).post("/api/auth/login").send(userData);
+    const token = loginUser.headers["set-cookie"][0].split("=")[1];
+
+    // logout user
+    const { body, statusCode, headers } = await request(app)
+      .get("/api/auth/logout")
+      .set("Cookie", `jwt=${token}`);
+    console.log("headers", headers);
+
+    expect(statusCode).toBe(200);
+    expect(body).toEqual(
+      expect.objectContaining({ message: expect.any(String) })
+    );
+    expect(body.message).toBe("user logged out");
+    expect(headers["set-cookie"][0]).toBe(
+      "jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+    );
   });
 });

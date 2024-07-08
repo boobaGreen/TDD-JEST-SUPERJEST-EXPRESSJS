@@ -45,4 +45,28 @@ const loginController = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsersController, createUserController, loginController };
+const getUserProfileController = async (req, res, next) => {
+  try {
+    // ._doc is a mongoose method for getting the document in JSON format from the user object in BSON format
+    const { password, ...rest } = req.user._doc;
+    console.log("rest", rest);
+    return res.status(200).json(rest);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// logout controller
+const logoutController = async (req, res, next) => {
+  res.clearCookie("jwt");
+  return res.json({ message: "user logged out" });
+};
+
+module.exports = {
+  getUsersController,
+  createUserController,
+  loginController,
+  getUserProfileController,
+  logoutController,
+};
